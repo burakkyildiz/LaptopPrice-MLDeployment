@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Laptop Price Prediction</title>
+  <!-- TailwindCSS CDN for quick modern styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
+  </style>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && systemDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="bg-fixed bg-gradient-to-br from-slate-100 via-sky-100 to-emerald-100 text-slate-800 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 dark:text-slate-100">
+  <div class="min-h-screen flex items-center justify-center py-10 px-4">
+    <div class="w-full max-w-5xl">
+      <div class="mb-8 text-center">
+        <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight">Laptop Price Prediction</h1>
+        <p class="mt-2 text-slate-600 dark:text-slate-400">Fill in the inputs to see an instant prediction.</p>
+      </div>
+
+      <div class="max-w-3xl mx-auto flex flex-col gap-6">
+        <!-- Form Card (center) -->
+        <div class="bg-white shadow-sm ring-1 ring-black/5 rounded-xl p-6 dark:bg-slate-800 dark:ring-white/10">
+          <form id="predict-form" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Company -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="Company">Company</label>
+              <select id="Company" class="w-full rounded-lg border border-slate-300 px-3 py-2 bg-white text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
+                <option value="" disabled selected>Select</option>
+              </select>
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="Company"></p>
+            </div>
+
+            <!-- TypeName -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="TypeName">Type Name</label>
+              <select id="TypeName" class="w-full rounded-lg border border-slate-300 px-3 py-2 bg-white text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
+                <option value="" disabled selected>Select</option>
+              </select>
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="TypeName"></p>
+            </div>
+
+            <!-- CPU Brand -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="Cpu_brand">CPU Brand</label>
+              <select id="Cpu_brand" class="w-full rounded-lg border border-slate-300 px-3 py-2 bg-white text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
+                <option value="" disabled selected>Select</option>
+              </select>
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="Cpu_brand"></p>
+            </div>
+
+            <!-- GPU Brand -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="Gpu_brand">GPU Brand</label>
+              <select id="Gpu_brand" class="w-full rounded-lg border border-slate-300 px-3 py-2 bg-white text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
+                <option value="" disabled selected>Select</option>
+              </select>
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="Gpu_brand"></p>
+            </div>
+
+            <!-- OS -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="Os">Operating System</label>
+              <select id="Os" class="w-full rounded-lg border border-slate-300 px-3 py-2 bg-white text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-400">
+                <option value="" disabled selected>Select</option>
+              </select>
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="Os"></p>
+            </div>
+
+            <!-- RAM -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="Ram">RAM (GB)</label>
+              <input id="Ram" type="number" min="0" step="1" placeholder="e.g., 8" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700" />
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="Ram"></p>
+            </div>
+
+            <!-- Weight -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="Weight">Weight (kg)</label>
+              <input id="Weight" type="text" inputmode="decimal" pattern="[0-9]+([\.,][0-9]+)?" placeholder="e.g., 1.35 or 1,35" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700" />
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="Weight"></p>
+            </div>
+
+            <!-- PPI -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="Ppi">PPI</label>
+              <input id="Ppi" type="text" inputmode="decimal" pattern="[0-9]+([\.,][0-9]+)?" placeholder="e.g., 141.2 or 141,2" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700" />
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="Ppi"></p>
+            </div>
+
+            <!-- HDD -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="HDD">HDD (GB)</label>
+              <input id="HDD" type="number" min="0" step="1" placeholder="e.g., 0 or 1000" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700" />
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="HDD"></p>
+            </div>
+
+            <!-- SSD -->
+            <div>
+              <label class="block text-sm font-medium mb-1" for="SSD">SSD (GB)</label>
+              <input id="SSD" type="number" min="0" step="1" placeholder="e.g., 256" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700" />
+              <p class="mt-1 hidden text-xs text-red-600" data-error-for="SSD"></p>
+            </div>
+
+            <!-- TouchScreen -->
+            <div>
+              <label class="block text-sm font-medium mb-1">Touchscreen</label>
+              <label class="relative inline-flex items-center cursor-pointer select-none">
+                <input id="TouchScreen" type="checkbox" class="peer sr-only" aria-checked="false" />
+                <div class="h-7 w-12 rounded-full bg-gradient-to-r from-slate-300 to-slate-200 transition-colors peer-checked:from-indigo-500 peer-checked:to-fuchsia-500 dark:from-slate-600 dark:to-slate-700"></div>
+                <span class="pointer-events-none absolute left-1 top-1 h-5 w-5 translate-x-0 rounded-full bg-white shadow-md ring-1 ring-black/5 transition-transform duration-200 peer-checked:translate-x-5"></span>
+                <span class="ml-14 text-sm text-slate-600 dark:text-slate-300">On</span>
+              </label>
+            </div>
+
+            <!-- IPS -->
+            <div>
+              <label class="block text-sm font-medium mb-1">IPS Panel</label>
+              <label class="relative inline-flex items-center cursor-pointer select-none">
+                <input id="Ips" type="checkbox" class="peer sr-only" aria-checked="false" />
+                <div class="h-7 w-12 rounded-full bg-gradient-to-r from-slate-300 to-slate-200 transition-colors peer-checked:from-indigo-500 peer-checked:to-fuchsia-500 dark:from-slate-600 dark:to-slate-700"></div>
+                <span class="pointer-events-none absolute left-1 top-1 h-5 w-5 translate-x-0 rounded-full bg-white shadow-md ring-1 ring-black/5 transition-transform duration-200 peer-checked:translate-x-5"></span>
+                <span class="ml-14 text-sm text-slate-600 dark:text-slate-300">On</span>
+              </label>
+            </div>
+
+            <div class="sm:col-span-2 flex items-center justify-between pt-2">
+              <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-indigo-600 to-fuchsia-600 px-4 py-2.5 text-white font-medium shadow hover:from-indigo-500 hover:to-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                Predict
+              </button>
+              <button id="clear-btn" type="button" class="text-sm text-slate-500 hover:text-slate-700">Clear</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Result Card (bottom) -->
+        <div class="bg-white shadow-sm ring-1 ring-black/5 rounded-xl p-6 dark:bg-slate-800 dark:ring-white/10">
+          <h2 class="text-lg font-semibold">Result</h2>
+          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">The prediction will appear here.</p>
+          <div id="result" class="mt-4 rounded-lg bg-slate-50 border border-slate-200 p-4 text-slate-700 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+            No prediction yet.
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-10 text-center text-sm text-slate-400 dark:text-slate-500">
+        <span>© <span id="year"></span> Laptop Price Project</span>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('predict-form');
+    const resultBox = document.getElementById('result');
+    const yearEl = document.getElementById('year');
+    yearEl.textContent = new Date().getFullYear();
+    // Theme button removed; system/previous preference still applies via early script
+
+    // Options for categorical fields
+    const OPTIONS = {
+      Company: ['Acer','Apple','ASUS','Dell','HP','Lenovo','MSI','Microsoft','Razer','Toshiba','Samsung','LG','Huawei','Unknown'],
+      TypeName: ['Ultrabook','Notebook','Gaming','2 in 1 Convertible','Workstation','Netbook','Other'],
+      Cpu_brand: ['Intel Core i7','Intel Core i5','Intel Core i3','AMD Processor','Other Intel Processor'],
+      Gpu_brand: ['NVIDIA','AMD','Intel','Apple','Other'],
+      Os: ['Windows','MacOS','Linux','No OS','Chrome OS','Other']
+    };
+    function populateSelect(id, list) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const first = '<option value="" disabled selected>Select</option>';
+      el.innerHTML = first + list.map(v => `<option value="${v}">${v}</option>`).join('');
+    }
+    ['Company','TypeName','Cpu_brand','Gpu_brand','Os'].forEach(k => populateSelect(k, OPTIONS[k]));
+    // Tone control for selects: dim when placeholder selected, brighten when value chosen
+    function updateSelectTone(el) {
+      if (!el) return;
+      if (!el.value) {
+        el.classList.add('text-slate-500', 'dark:text-slate-400');
+        el.classList.remove('text-slate-900', 'dark:text-slate-100');
+      } else {
+        el.classList.remove('text-slate-500', 'dark:text-slate-400');
+        el.classList.add('text-slate-900', 'dark:text-slate-100');
+      }
+    }
+    ['Company','TypeName','Cpu_brand','Gpu_brand','Os'].forEach((id) => {
+      const el = v(id);
+      updateSelectTone(el);
+      el?.addEventListener('change', () => updateSelectTone(el));
+    });
+
+    function v(id) { return document.getElementById(id); }
+    function toNumber(value, fallback = 0) {
+      if (typeof value === 'string') {
+        value = value.replace(',', '.');
+      }
+      const n = Number(value);
+      return Number.isFinite(n) ? n : fallback;
+    }
+    function setResult(html) { resultBox.innerHTML = html; }
+    // Not: Üstteki erken script sistem/daha önceki tercihe göre dark sınıfını ayarlıyor
+
+    function showError(id, message) {
+      const input = v(id);
+      input.classList.add('border-red-500', 'focus:ring-red-500');
+      const p = document.querySelector(`[data-error-for="${id}"]`);
+      if (p) { p.textContent = message; p.classList.remove('hidden'); }
+    }
+    function clearError(id) {
+      const input = v(id);
+      input.classList.remove('border-red-500', 'focus:ring-red-500');
+      const p = document.querySelector(`[data-error-for="${id}"]`);
+      if (p) { p.textContent = ''; p.classList.add('hidden'); }
+    }
+
+    ['Company','TypeName','Cpu_brand','Gpu_brand','Os','Ram','Weight','Ppi','HDD','SSD'].forEach((id) => {
+      const el = v(id);
+      if (el) {
+        el.addEventListener('input', () => clearError(id));
+        el.addEventListener('blur', () => validateField(id));
+      }
+    });
+
+    function validateField(id) {
+      const val = v(id).value.trim();
+      if (['Company','TypeName','Cpu_brand','Gpu_brand','Os'].includes(id)) {
+        if (!val) { showError(id, 'This field is required.'); return false; }
+        return true;
+      }
+      if (['Ram','HDD','SSD'].includes(id)) {
+        if (val === '') { showError(id, 'Please enter a number.'); return false; }
+        const num = toNumber(val, NaN);
+        if (!Number.isFinite(num) || num < 0) { showError(id, 'Enter a valid number ≥ 0.'); return false; }
+        return true;
+      }
+      if (['Weight','Ppi'].includes(id)) {
+        if (val === '') { showError(id, 'Please enter a number.'); return false; }
+        const num = toNumber(val, NaN);
+        if (!Number.isFinite(num) || num <= 0) { showError(id, 'Enter a valid positive number.'); return false; }
+        return true;
+      }
+      return true;
+    }
+
+    function validateAll() {
+      const fields = ['Company','TypeName','Cpu_brand','Gpu_brand','Os','Ram','Weight','Ppi','HDD','SSD'];
+      let ok = true;
+      fields.forEach((f) => { if (!validateField(f)) ok = false; });
+      return ok;
+    }
+
+    document.getElementById('clear-btn').addEventListener('click', () => {
+      form.reset();
+      setResult('No prediction yet.');
+      ['Company','TypeName','Cpu_brand','Gpu_brand','Os','Ram','Weight','Ppi','HDD','SSD'].forEach(clearError);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateAll()) { return; }
+
+      const payload = {
+        Company: v('Company').value || 'Unknown',
+        TypeName: v('TypeName').value || 'Unknown',
+        Ram: toNumber(v('Ram').value, 0),
+        Weight: toNumber(v('Weight').value, 0),
+        TouchScreen: v('TouchScreen').checked ? 1 : 0,
+        Ips: v('Ips').checked ? 1 : 0,
+        Ppi: toNumber(v('Ppi').value, 0),
+        Cpu_brand: v('Cpu_brand').value || 'Unknown',
+        HDD: toNumber(v('HDD').value, 0),
+        SSD: toNumber(v('SSD').value, 0),
+        Gpu_brand: v('Gpu_brand').value || 'Unknown',
+        Os: v('Os').value || 'Unknown',
+      };
+
+      setResult('<span class="text-slate-500">Calculating...</span>');
+
+      try {
+        const res = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          const msg = await res.text();
+          throw new Error(msg || 'Request failed');
+        }
+
+        const data = await res.json();
+        const price = data.predicted_price;
+        setResult(`
+          <div class="rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 p-4 shadow-lg">
+            <div class="text-xs uppercase tracking-wide text-white/80">Predicted Price</div>
+            <div class="mt-1 text-3xl font-extrabold tracking-tight text-white">${price?.toLocaleString('tr-TR', { maximumFractionDigits: 0 })} ₺</div>
+          </div>
+        `);
+      } catch (err) {
+        setResult(`<span class="text-red-600">Error: ${err?.message || err}</span>`);
+      }
+    });
+  </script>
+</body>
+</html>
